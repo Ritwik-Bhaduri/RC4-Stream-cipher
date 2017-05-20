@@ -1,0 +1,41 @@
+#include<stdio.h>
+#include<math.h>
+#include<stdlib.h>
+int prga(int S[256]);
+main(){ 
+	int i,j,k,p,keybin[64],keybyte[8],S[256],count[256],i1,j1,c1;
+	printf("Enter the no. of keys you want to try: ");
+	scanf("%d",&p);
+	int output[p];
+	for(i=0;i<p;i++){ 
+	//Generating random keys in byte
+	 for(i1=0;i1<8;i1++){
+	      keybyte[i1]=rand()%256;
+	 }
+	//Key scheduling algo:
+	for (i1=0;i1<256;i1++)	S[i1] = i1;
+	j1 = 0;
+	for (i1=0;i1<256;i1++){
+	   j1 = (j1 + S[i1] + keybyte[i1%8]) %256;
+	   c1=S[i1]; S[i1]=S[j1]; S[j1]=c1;
+		}
+	//
+		output[i]=prga(S);
+	}
+	for(i=0;i<256;i++)	count[i]=0;
+	for(i=0;i<p;i++)	count[output[i]]++;
+	for(i=0;i<256;i++)	printf("count of %d is: %d\n",i,count[i]);
+}
+
+
+int prga(int S[256]){
+	int i=0,j=0,count=0,c,K;
+	while(count<2){
+	    i=(i+1)%256;
+	    j=(j+S[i])%256;
+	    c=S[i];S[i]=S[j];S[j]=c;
+	    K=S[(S[i]+S[j])%256];
+	    count++;
+		}
+	return K;
+}
